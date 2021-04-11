@@ -1,0 +1,84 @@
+///////////////////////////////////////////////////////////////////////////////
+// GENERAL INFORMATION
+///////////////////////////////////////////////////////////////////////////////
+Name:     SEMESTER PROJECT
+Author:   Lukas Malek
+Date:     23.5.2020
+Course:   PRG 2020
+Source:   Jan Fajgl
+
+The application was made for the semestral project in May 2020. It is an
+assignment for Nucleo-F446RE to practise the communication using buffer
+between nucleo and controlling program on the computer. There is rich
+pallete of commands that can be used. Depending which command we choose,
+the controlling program sends a message which Nucleo procceed and print
+correct respond using serial port. We use circular buffer for sending and
+receiving messages, other one is used when we are masrhaling or unmarshaling
+the messages. We copy the message from the general buffer to temporary one
+and then we send the message from this one where we know that we send it
+from the beginning of data to the end. The message names are converted to
+numbers according to possition in enum in message.h.
+
+///////////////////////////////////////////////////////////////////////////////
+// MAIN PROGRAM
+///////////////////////////////////////////////////////////////////////////////
+The main task of the program is to calculare julia set fractals. The
+computation is done on nucleo, we send from the control program
+that is main.c information which we want to compute and nucleo sends the
+results. The output is printed in gui where we can see loading fractal.
+To control the program we use multiple commands listed berllow. There might
+be some extra functionalities added. I hope so.
+
+'g' - requests the firmware version number of Nucleo program(MSG_GET_VERSION)
+'s' - set the calculation values before calulating (MSG_SET_COMPUTE)
+'1' - start calculation (MSG_COMPUTE)
+'a' - abort the current calculation (MSG_ABORT)
+'r' - resets the cid
+'l' - clear the calculation buffer
+'p' - redraws the contents of the window with the current buffer
+'c' - compute fractal on PC (for testing and control purposes)
+'m' - animate fractal
+'q' - terminates individual threads and the main thread of the program
+'+' - increase c parameter while it is not computing
+'-' - decrease c parameter while it is not computing
+
+///////////////////////////////////////////////////////////////////////////////
+// NUCLEO PART
+///////////////////////////////////////////////////////////////////////////////
+ Assignment for Nucleo-F446RE to practise the communication using buffer
+ between nucleo and controlling program on the computer. There is rich
+ pallete of commands that can be used. Depending which command we choose,
+ the controlling program sends a message which Nucleo procceed and print
+ correct respond using serial port. We use one buffer for sending and
+ receiving messages, other one is used when we are masrhaling or unmarshaling
+ the message. We copy the message from the general buffer to temporary one
+ and then we send the message from this one where we know that we send it
+ from the beginning to the end of data. The message names are converted to
+ numbers according to possition in enum in message.h.
+
+ INPUT MESSAGE -> OUTPUT MESSAGE
+ START -> MSG_STARTUP
+ MSG_GET_VERSION -> MSG_VERSION
+ MSG_SET_COMPUTE -> MSG_ERROR / MSG_OK
+ COMPUTING -> BLINK WITH LED + MSG_COMPUTE_DATA
+ COMPUTATION DONE -> MSG_DONE
+ MSG_ABORT -> MSG_ERROR / MSG_OK
+ PRESSED BUTTON = MSG_ABORT -> MSG_ABORT / MSG_DONE
+
+
+///////////////////////////////////////////////////////////////////////////////
+// FILES DESCRIPTION
+///////////////////////////////////////////////////////////////////////////////
+nucleo.cpp      - handles all calculations and send the results to boss
+computation     - mathematical base which performs fractal calculation
+event_queue     - circular buffer used by both threads and boss in main.c
+gui             - draw the calculated pixels into graphical ouput using SDL
+main.c          - multithreaded program that handles User and Nucleo interrupts
+messages        - communication messages between keyboard, serial and boss thrd
+my_functions    - user functions used through other files
+serial_nonblock	- contains all neceserities to operate non-block terminal
+xwin_sdl        - functions for visualizing the fractal in gui
+
+
+-------------------------------------------------------------------------------
+© Lukas Malek ft. Bob&Bobek, 2020
